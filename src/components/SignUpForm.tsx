@@ -9,7 +9,6 @@ function SignUpForm() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<SignUpInputs>({
     resolver: zodResolver(SignUpSchema),
@@ -17,12 +16,17 @@ function SignUpForm() {
   })
 
   const onSubmit: SubmitHandler<SignUpInputs> = async (data) => {
-    const response = await signUpUser(data)
-    console.log("AAAAAAAAAAAAA")
-    console.log(response)
+    try {
+      const response = await signUpUser(data)
+      const accessToken = response.data.access_token
+      const refreshToken = response.data.refresh_token
+      localStorage.setItem("access_token", accessToken)
+      localStorage.setItem("refresh_token", refreshToken)
+    } catch {
+      console.log("Error creating user")
+    }
   }
 
-  console.log(watch("username"))
 
   return (
     <form
@@ -40,7 +44,7 @@ function SignUpForm() {
           }`}
       />
       {errors.username && (
-        <span className="text-xs text-red-400">{errors.userName.message}</span>
+        <span className="text-xs text-red-400">{errors.username.message}</span>
       )}
 
       <input

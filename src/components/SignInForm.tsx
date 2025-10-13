@@ -1,31 +1,28 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signInUser } from "../shared/api/authApi.ts";
+import type { SignInInputs } from "../shared/types/auth/auth.types.ts";
+import { SignInSchema } from "../shared/types/auth/auth.schema.ts";
 
-// Schema for Sign In
-const SignInSchema = z.object({
-  userEmail: z.string().email("Invalid Email"),
-  password: z.string().min(8, "Too short password").max(24, "Too long password"),
-});
 
-type SignInInputs = z.infer<typeof SignInSchema>;
 
 function SignInForm() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<SignInInputs>({
     resolver: zodResolver(SignInSchema),
     mode: "onSubmit",
   });
 
-  // Submit handler (log to console as requested)
-  const onSubmit: SubmitHandler<SignInInputs> = (data) => console.log(data);
-
-  // Example watch (optional debug)
-  console.log(watch("userEmail"));
+  const onSubmit: SubmitHandler<SignInInputs> = async (data) => {
+    const response = await signInUser(data)
+    const accessToken = response.data.access_token
+    const refreshToken = response.data.refresh_token
+    localStorage.setItem("access_token", accessToken)
+    localStorage.setItem("refresh_token", refreshToken)
+  }
 
   return (
     <form
@@ -33,16 +30,16 @@ function SignInForm() {
       className="max-w-sm mx-auto mt-10 p-8 pt-12 bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.3)] border border-gray-800 flex flex-col gap-5"
     >
       <input
-        {...register("userEmail")}
+        {...register("email")}
         placeholder="Email"
         className={`w-full rounded-lg px-4 py-2 bg-gray-800 text-gray-100 placeholder-gray-400 border transition focus:outline-none
-          ${errors.userEmail
+          ${errors.email
             ? "border-red-500 focus:ring-2 focus:ring-red-400"
             : "border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
           }`}
       />
-      {errors.userEmail && (
-        <span className="text-xs text-red-400">{errors.userEmail.message}</span>
+      {errors.email && (
+        <span className="text-xs text-red-400">{errors.email.message}</span>
       )}
 
       <input
