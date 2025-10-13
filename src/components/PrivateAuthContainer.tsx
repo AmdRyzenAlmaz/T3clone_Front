@@ -3,7 +3,7 @@ import { useAppSelector } from "../store/store";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router";
 
-export const AuthContainer = () => {
+export const PrivateAuthContainer = () => {
   const accessToken = useAppSelector((state) => state.user.access_token);
   console.log(accessToken);
   const navigate = useNavigate();

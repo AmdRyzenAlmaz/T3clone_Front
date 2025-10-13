@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
-import { AuthContainer } from "./components/AuthContainer";
+import { PrivateAuthContainer } from "./components/PrivateAuthContainer.tsx";
 import { PublicAuthConatiner } from "./components/PublicAuthConatiner.tsx";
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
         <Route path="/sign-in" element={<AuthPage />} />
       </Route>
 
-      <Route element={<AuthContainer />}>
+      <Route element={<PrivateAuthContainer />}>
         <Route path="/" element={<h1>Chat page</h1>} />
       </Route>
 
