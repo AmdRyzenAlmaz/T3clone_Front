@@ -3,6 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signInUser } from "../shared/api/authApi.ts";
 import type { SignInInputs } from "../shared/types/auth/auth.types.ts";
 import { SignInSchema } from "../shared/types/auth/auth.schema.ts";
+import { setAccessToken, setRefreshToken } from "../shared/utils/tokenUtils.ts";
+import { useNavigate } from "react-router";
+import { setAuth } from "../store/userSlice.ts";
+import { useAppDispatch } from "../store/store.ts";
 
 
 
@@ -15,13 +19,21 @@ function SignInForm() {
     resolver: zodResolver(SignInSchema),
     mode: "onSubmit",
   });
-
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const onSubmit: SubmitHandler<SignInInputs> = async (data) => {
-    const response = await signInUser(data)
-    const accessToken = response.data.access_token
-    const refreshToken = response.data.refresh_token
-    localStorage.setItem("access_token", accessToken)
-    localStorage.setItem("refresh_token", refreshToken)
+    try {
+      const response = await signInUser(data)
+      const accessToken = response.data.access_token
+      const refreshToken = response.data.refresh_token
+      console.log(response)
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      dispatch(setAuth(true));
+    } catch (error) {
+      console.log(error)
+    }
+    navigate("/")
   }
 
   return (

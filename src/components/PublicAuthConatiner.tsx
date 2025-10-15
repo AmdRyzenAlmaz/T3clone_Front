@@ -1,12 +1,10 @@
-import { Navigate, Outlet } from "react-router-dom";
 import { useAppSelector } from "../store/store";
+import { Navigate, Outlet } from "react-router-dom";
 
 export const PublicAuthConatiner = () => {
-  const accessToken = useAppSelector((s) => s.user.access_token);
+  const { isAuth, initialized } = useAppSelector(s => s.user);
 
-  if (accessToken) {
-    return <Navigate to="/" replace />;
-  }
-
+  if (!initialized) return null;
+  if (isAuth === true) return <Navigate to="/" replace />;
   return <Outlet />;
 };

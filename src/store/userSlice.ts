@@ -1,26 +1,29 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
-  access_token: string | null;
+  isAuth: boolean | null,
+  initialized: boolean,
 }
 
 const initialState: UserState = {
-  access_token: localStorage.getItem("access_token"),
+  isAuth: null,
+  initialized: false,
 };
+
 
 const userSlice = createSlice({
   name: 'userToken',
   initialState,
   // todo Check if we need refresh token in redux
   reducers: {
-    setAccessToken: (state, action: PayloadAction<string>) => {
-      state.access_token = action.payload;
+    setAuth: (state, action: PayloadAction<boolean>) => {
+      state.isAuth = action.payload;
     },
-    clearAccessToken: (state) => {
-      state.access_token = null
+    setInitialized: (state, action: PayloadAction<boolean>) => {
+      state.initialized = action.payload;
     },
   },
 });
 
-export const { setAccessToken, clearAccessToken } = userSlice.actions;
+export const { setAuth, setInitialized } = userSlice.actions;
 export default userSlice.reducer;

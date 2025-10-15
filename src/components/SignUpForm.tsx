@@ -3,6 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { signUpUser } from "../shared/api/authApi.ts";
 import type { SignUpInputs } from "../shared/types/auth/auth.types.ts";
 import { SignUpSchema } from "../shared/types/auth/auth.schema.ts";
+import { setAuth } from "../store/userSlice.ts";
+import { setAccessToken, setRefreshToken } from "../shared/utils/tokenUtils.ts";
+import { useDispatch } from "react-redux";
 
 
 function SignUpForm() {
@@ -14,14 +17,15 @@ function SignUpForm() {
     resolver: zodResolver(SignUpSchema),
     mode: "onSubmit",
   })
-
+  const dispatch = useDispatch();
   const onSubmit: SubmitHandler<SignUpInputs> = async (data) => {
     try {
       const response = await signUpUser(data)
       const accessToken = response.data.access_token
       const refreshToken = response.data.refresh_token
-      localStorage.setItem("access_token", accessToken)
-      localStorage.setItem("refresh_token", refreshToken)
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      dispatch(setAuth(true))
     } catch {
       console.log("Error creating user")
     }
