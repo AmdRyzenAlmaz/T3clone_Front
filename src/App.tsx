@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import { PrivateAuthContainer } from "./components/PrivateAuthContainer.tsx";
-import { PublicAuthConatiner } from "./components/PublicAuthConatiner.tsx";
+import { PublicAuthContainer } from "./components/PublicAuthContainer.tsx";
 import AuthProvider from "./components/AuthProvider.tsx";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route element={<PublicAuthConatiner />}>
+        <Route element={<PublicAuthContainer />}>
           <Route path="/sign-up" element={<AuthPage />} />
           <Route path="/sign-in" element={<AuthPage />} />
         </Route>
