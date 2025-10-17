@@ -3,6 +3,7 @@ import AuthPage from "./pages/AuthPage";
 import { PrivateAuthContainer } from "./components/PrivateAuthContainer.tsx";
 import { PublicAuthContainer } from "./components/PublicAuthContainer.tsx";
 import AuthProvider from "./components/AuthProvider.tsx";
+import ChatPage from "./pages/ChatPage.tsx";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         </Route>
 
         <Route element={<PrivateAuthContainer />}>
-          <Route path="/" element={<h1>Chat page</h1>} />
+          <Route path="/" element={<ChatPage />} />
         </Route>
 
         <Route path="*" element={<h1>404 Not Found</h1>} />
